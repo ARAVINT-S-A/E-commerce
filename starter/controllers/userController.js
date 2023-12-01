@@ -40,6 +40,7 @@ const updateUserPassword=async (req,res)=>{
     }
     user.password=newPassword
     await user.save()//instead of updating we can use save method
+    res.status(StatusCodes.OK).json({user})
 }
 
 
