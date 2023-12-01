@@ -15,6 +15,7 @@ const cookieParser=require('cookie-parser')
 //connect app to db
 const connectDB=require('./db/connect')
 
+
 //importing routes
 const authRouter=require('./routes/authRoutes')
 const userRouter=require('./routes/userRoutes')
@@ -22,6 +23,8 @@ const userRouter=require('./routes/userRoutes')
 //import middlewares
 const notFoundMiddleware=require('./middleware/not-found')
 const errorHandlerMiddleware=require('./middleware/error-handler')
+const {authenticateUser}=require('./middleware/authentication')
+
 
 //defining port
 const port=process.env.PORT || 3000
@@ -45,7 +48,7 @@ app.get('/api/v1',(req,res)=>{
 
 
 app.use('/api/v1/auth',authRouter)
-app.use('/api/v1/users',userRouter)
+app.use('/api/v1/users',authenticateUser,userRouter)
 
 
 //applying middlewares
