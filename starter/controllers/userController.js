@@ -16,7 +16,7 @@ const getSingleUser=async (req,res)=>{
 }
 
 const showCurrentUser=async (req,res)=>{
-    res.send('show current')
+    res.status(StatusCodes.OK).json({user:req.user})//we just return the user details which we attached with req in authenticate
 }
 
 const updateUser=async (req,res)=>{
