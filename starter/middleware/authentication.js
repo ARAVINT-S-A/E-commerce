@@ -17,7 +17,9 @@ const authenticateUser=async (req,res,next)=>{
 }
 
 const authorizePermissions=(req,res,next)=>{
-    console.log('admin route');
+    if(req.user.role!=='admin'){
+        throw new CustomError.UnauthorizedError('no permission')
+    }
     next();
 }
 module.exports={
