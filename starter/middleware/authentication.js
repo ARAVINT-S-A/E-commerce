@@ -16,11 +16,13 @@ const authenticateUser=(req,res,next)=>{
     } 
 }
 
-const authorizePermissions=(req,res,next)=>{
-    if(req.user.role!=='admin'){
+const authorizePermissions=(...roles)=>{//we pass in the roles when we call the function in user routes and ppl with those roles would have authorization to access info
+    return (req,res,next)=>{
+    if(!roles.includes(req.signedCookies.role)){
         throw new CustomError.UnauthorizedError('unauthorized')
     }
     next();
+}
 }
 module.exports={
     authenticateUser,authorizePermissions
