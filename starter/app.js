@@ -23,7 +23,7 @@ const userRouter=require('./routes/userRoutes')
 //import middlewares
 const notFoundMiddleware=require('./middleware/not-found')
 const errorHandlerMiddleware=require('./middleware/error-handler')
-const {authenticateUser}=require('./middleware/authentication')
+
 
 
 //defining port
@@ -48,7 +48,7 @@ app.get('/api/v1',(req,res)=>{
 
 
 app.use('/api/v1/auth',authRouter)
-app.use('/api/v1/users',authenticateUser,userRouter)
+app.use('/api/v1/users',userRouter)
 
 
 //applying middlewares
