@@ -22,7 +22,18 @@ const showCurrentUser=async (req,res)=>{
 }
 
 const updateUser=async (req,res)=>{
-    res.send('update user')
+    const {name,email}=req.body
+    if(!name || !email){
+        throw new CustomError.BadRequestError('no details provided')
+    }
+    const user=await User.findOneAndUpdate({_id:req.user.userId},req.body,{
+        new:true,
+        runValidators:true
+    })
+    if(!user){
+        throw new CustomError.UnauthenticatedError('not found')
+    }
+    res.status(StatusCodes.OK).json({msg:"updated successfully"})
 }
 
 const updateUserPassword=async (req,res)=>{
