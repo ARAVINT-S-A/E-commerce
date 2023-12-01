@@ -1,7 +1,7 @@
 const CustomError=require('../errors/index')
 const {isTokenValid}=require('../utils/index')
 
-const authenticateUser=async (req,res,next)=>{
+const authenticateUser=(req,res,next)=>{
     const token=req.signedCookies.token
     if(!token){
         throw new CustomError.UnauthenticatedError('no permission')
