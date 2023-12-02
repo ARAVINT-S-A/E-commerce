@@ -160,7 +160,7 @@
 
 #### updateUser with user.save()
 
-#### Setup and Apply checkPermissions()
+#### Setup and Apply checkPermissions()//any user with other users userid can few their profile we should change that
 
 #### Product Model
 

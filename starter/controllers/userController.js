@@ -1,7 +1,7 @@
 const User=require('../models/user')
 const {StatusCodes}=require('http-status-codes')
 const CustomError=require('../errors/index')
-const {createTokenUser,attachCookiesToResponse}=require('../utils/index')
+const {createTokenUser,attachCookiesToResponse,checkPermissions}=require('../utils/index')
 
 const getAllUsers=async (req,res)=>{
     const users=await User.find({role:'user'}).select('-password')//we remove passwor dand return everyotehr details
@@ -10,6 +10,7 @@ const getAllUsers=async (req,res)=>{
 
 const getSingleUser=async (req,res)=>{
     const {id}=req.params
+    checkPermissions({requestuser:req.user,resourceuserId:id})
     const user=await User.findOne({_id:id}).select('-password')
     if(!user){
         throw new CustomError.NotFoundError('no user with id')
