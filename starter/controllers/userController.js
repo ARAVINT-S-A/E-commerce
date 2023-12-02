@@ -52,7 +52,7 @@ const updateUserPassword=async (req,res)=>{
         throw new CustomError.UnauthenticatedError('invalid credentials')
     }
     user.password=newPassword
-    await user.save()//instead of updating we can use save method
+    await user.save()//instead of updating we can use save method because in user model only if we save we hash the password if we use findone and update the new password wont be saved in db
     res.status(StatusCodes.OK).json({msg:"password updated"})
 }
 
