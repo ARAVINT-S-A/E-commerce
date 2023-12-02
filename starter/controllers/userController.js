@@ -10,7 +10,8 @@ const getAllUsers=async (req,res)=>{
 
 const getSingleUser=async (req,res)=>{
     const {id}=req.params
-    checkPermissions({requestuser:req.user,resourceuserId:id})
+    //console.log(req.user)
+    checkPermissions({requestuserId:req.user.userId,resourceuserId:id})
     const user=await User.findOne({_id:id}).select('-password')
     if(!user){
         throw new CustomError.NotFoundError('no user with id')
