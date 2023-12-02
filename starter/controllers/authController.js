@@ -1,7 +1,7 @@
 const User=require('../models/user')
 const {StatusCodes}=require('http-status-codes')
 const CustomError=require('../errors/index')
-const{attachCookiesToResponse}=require('../utils/index')
+const{createTokenUser,attachCookiesToResponse}=require('../utils/index')
 const register=async(req,res)=>{
     const {name,email,password}=req.body//we r not directly entering req.body in create because of safety as if user gives his role as admin then it would be stored in db but that privilege should not be given to user 
  
@@ -15,7 +15,7 @@ const register=async(req,res)=>{
         throw new CustomError.BadRequestError('provide details')
     }
 
-    const tokenUser={name:user.name,userId:user._id,role:user.role}
+    const tokenUser=createTokenUser({user})
 
     attachCookiesToResponse({res,user:tokenUser})
     // const token=createJWT({payload:tokenUser})
@@ -37,7 +37,7 @@ const login=async(req,res)=>{
         throw new CustomError.UnauthenticatedError('invalid password')
     }
     //is password crct
-    const tokenUser={name:user.name,userId:user._id,role:user.role}
+    const tokenUser=createTokenUser({user})
     attachCookiesToResponse({res,user:tokenUser})
     res.status(StatusCodes.OK).json({tokenUser})
 }
