@@ -1,7 +1,7 @@
 const User=require('../models/user')
 const {StatusCodes}=require('http-status-codes')
 const CustomError=require('../errors/index')
-
+const {createTokenUser,attachCookiesToResponse}=require('../utils/index')
 
 const getAllUsers=async (req,res)=>{
     const users=await User.find({role:'user'}).select('-password')//we remove passwor dand return everyotehr details
@@ -33,6 +33,8 @@ const updateUser=async (req,res)=>{
     if(!user){
         throw new CustomError.UnauthenticatedError('not found')
     }
+    const tokenUser=createTokenUser({user})
+    attachCookiesToResponse({res,user:tokenUser})
     res.status(StatusCodes.OK).json({msg:"updated successfully"})
 }
 
