@@ -1,6 +1,7 @@
 const CustomError=require('../errors/index')
 const Product=require('../models/products')
 const {StatusCodes}=require('http-status-codes')
+const { checkPermissions } = require('../utils')
 
 const createProduct=async(req,res)=>{
     req.body.user=req.user.userId
@@ -12,13 +13,26 @@ const getAllProducts=async (req,res)=>{
     res.status(StatusCodes.OK).json({products})
 }
 const getSingleProducts=async (req,res)=>{
-    res.send('get single products')
+    const {id}= req.params
+    const product=await Product.findOne({_id:id})
+    if(!product){
+        throw new CustomError.NotFoundError('no product found')
+    }
+    res.status(StatusCodes.OK).json(product)
 }
 const updateProduct=async (req,res)=>{
-    res.send('update')
+    const {id}=req.params
+    const product=await Product.findOneAndUpdate({_id:id},req.body,{new:true,runValidators:true})
+    res.status(StatusCodes.OK).json({product})
 }
 const deleteProduct=async (req,res)=>{
-    res.send('delete')
+    const {id}=req.params
+    const product=await Product.findOne({_id:id})
+    if(!product){
+        throw new CustomError.NotFoundError('no product with id')
+    }
+    await product.remove()
+    res.status(StatusCodes.OK).json("product deleted")
 }
 const uploadImage=async (req,res)=>{
     res.send('upload')
