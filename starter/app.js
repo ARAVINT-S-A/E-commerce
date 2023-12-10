@@ -11,6 +11,7 @@ const app=express()
 //rest of packages
 const morgan=require('morgan')//middleware
 const cookieParser=require('cookie-parser')
+const fileUpload=require('express-fileupload')
 
 //connect app to db
 const connectDB=require('./db/connect')
@@ -34,8 +35,8 @@ const port=process.env.PORT || 3000
 app.use(morgan('tiny'))//this time refers to the amount of info u need 
 app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET))//to access the cookies  we use the same jwt secret to sign the cookies for now to be more secure use diff string
-
-
+app.use(express.static('./public'))//to upload images
+app.use(fileUpload())
 
 app.get('/',(req,res)=>{
     res.send("ecommerce")
