@@ -9,7 +9,7 @@ const authenticateUser=(req,res,next)=>{
     try{
     const {name,userId,role}=isTokenValid({token:token})
     req.user={name,userId,role}//we pass this details with req because using this role we can authorize based on whether the user is admin or just user
-    console.log(req.user)
+    // console.log(req.user)
     next();
     }
     catch(err){
@@ -19,7 +19,7 @@ const authenticateUser=(req,res,next)=>{
 
 const authorizePermissions=(...roles)=>{//we pass in the roles when we call the function in user routes and ppl with those roles would have authorization to access info
     return (req,res,next)=>{
-    if(!roles.includes(req.signedCookies.role)){
+    if(!roles.includes(req.user.role)){
         throw new CustomError.UnauthorizedError('unauthorized')
     }
     next();
