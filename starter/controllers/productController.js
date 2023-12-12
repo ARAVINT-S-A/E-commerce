@@ -2,6 +2,7 @@ const CustomError=require('../errors/index')
 const Product=require('../models/products')
 const {StatusCodes}=require('http-status-codes')
 const { checkPermissions } = require('../utils')
+const path=require('path')//used to save image inn uploads
 
 const createProduct=async(req,res)=>{
     req.body.user=req.user.userId
@@ -44,7 +45,21 @@ const deleteProduct=async (req,res)=>{
     res.status(StatusCodes.OK).json("product deleted")
 }
 const uploadImage=async (req,res)=>{
-    res.send('upload')
+    if(!req.files){
+        throw new CustomError.BadRequestError('no file found')
+    }
+    const productImage=req.files.image;
+    console.log(productImage)
+    if(!productImage.mimetype.startsWith('image')){
+        throw new CustomError.BadRequestError('upload image')
+    }
+    const maxSize=1024*1024
+    if(productImage.size>maxSize){
+        throw new CustomError.BadRequestError('large image size')
+    }
+    const imagePath=path.join(__dirname,'../public/uploads/'+`${productImage.name}`)
+    await productImage.mv(imagePath)//move image to that imagepath
+    res.status(StatusCodes.OK).json({image:`/uploads/${productImage.name}`})
 }
 
 
