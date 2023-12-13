@@ -15,8 +15,8 @@ const getAllProducts=async (req,res)=>{
 }
 const getSingleProducts=async (req,res)=>{
     const {id}= req.params
-    const product=await Product.findOne({_id:id}).ppopulate('reviews')//we populate with the virtually created reviews field 
-
+    const product=await Product.findOne({_id:id}).populate('reviews')//we populate with the virtually created reviews field 
+    //this this populate we cant query and get a specific review of a specific product we can only get all reviews of a particular product
     if(!product){
         throw new CustomError.NotFoundError('no product found')
     }
