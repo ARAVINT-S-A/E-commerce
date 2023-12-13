@@ -35,4 +35,12 @@ const ReviewSchema=new mongoose.Schema(
 //a user can leave only 1 review per product
 ReviewSchema.index({product:1,user:1},{unique:true})
 
+ReviewSchema.post('save',async function(next){
+    console.log('saved review')
+})
+
+ReviewSchema.post('remove',async function(next){
+    console.log('removed review')
+})
+
 module.exports=mongoose.model('Review',ReviewSchema)

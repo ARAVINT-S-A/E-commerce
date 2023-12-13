@@ -30,7 +30,7 @@ const getAllReviews=async(req,res)=>{
     if(!reviews){
         throw new CustomError.NotFoundError('no reviews')
     }
-    res.status(StatusCodes.OK).json({reviews})
+    res.status(StatusCodes.OK).json({reviews,count:reviews.length})
 }
 const getSingleReview=async(req,res)=>{
     const{id}=req.params;
@@ -62,9 +62,10 @@ const deleteReview=async(req,res)=>{
     const{id}=req.params;
     const review=await Review.findOne({_id:id})
     if(!review){
-        throw new CustomError.NotFoundError('no product found')
+        throw new CustomError.NotFoundError('no review found')
     }
-    checkPermissions(req.user,review.user)
+    //console.log(req.user.role)
+    checkPermissions({requestUser:req.user,resourceUserId:review.user})
     await review.remove()
     res.status(StatusCodes.OK).json('review deleted')
 }
@@ -72,7 +73,7 @@ const deleteReview=async(req,res)=>{
 const getSingleProductReviews=async(req,res)=>{
     const{id:productId}=req.params
     const reviews=await Review.find({product:productId})
-    res.status(StatusCodes.OK).json({reviews})
+    res.status(StatusCodes.OK).json({reviews,count:reviews.length})
 }
 
 module.exports={
