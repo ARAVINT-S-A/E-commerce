@@ -3,7 +3,6 @@ const Product=require('../models/products')
 const {StatusCodes}=require('http-status-codes')
 const { checkPermissions } = require('../utils')
 const path=require('path')//used to save image inn uploads
-
 const createProduct=async(req,res)=>{
     req.body.user=req.user.userId
     const product=await Product.create(req.body)
