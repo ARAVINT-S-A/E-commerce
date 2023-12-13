@@ -26,7 +26,7 @@ const createReview=async(req,res)=>{
 }
 
 const getAllReviews=async(req,res)=>{
-    const reviews=await Review.find({})
+    const reviews=await Review.find({}).populate({path:'product',select:'name company price'})//we do without populate we will get only the porduct id not the product name so we use populate to get the selected details of the product(specified in path) 
     if(!reviews){
         throw new CustomError.NotFoundError('no reviews')
     }
