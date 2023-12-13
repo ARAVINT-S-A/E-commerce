@@ -15,7 +15,7 @@ const getAllProducts=async (req,res)=>{
 }
 const getSingleProducts=async (req,res)=>{
     const {id}= req.params
-    const product=await Product.findOne({_id:id}).ppopulate('reviews')
+    const product=await Product.findOne({_id:id}).ppopulate('reviews')//we populate with the virtually created reviews field 
 
     if(!product){
         throw new CustomError.NotFoundError('no product found')
