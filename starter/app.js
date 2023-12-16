@@ -12,6 +12,11 @@ const app=express()
 const morgan=require('morgan')//middleware
 const cookieParser=require('cookie-parser')
 const fileUpload=require('express-fileupload')
+const rateLimiter=require('express-rate-limit')
+const helmet=require('helmet')
+const xss=require('xss-clean')
+const cors=require('cors')
+const mongoSatinize=require('express-mongo-sanitize')
 
 //connect app to db
 const connectDB=require('./db/connect')
@@ -34,12 +39,25 @@ const { authenticateUser } = require('./middleware/authentication')
 //defining port
 const port=process.env.PORT || 3000
 
+
+//security
+app.set('trust proxy',1)
+app.use(rateLimiter({//ratelimiter should always set after trust proxy
+    windowMs:15*60*1000,
+    max:60
+}))
+app.use(helmet())
+app.use(cors())
+app.use(xss())
+app.use(mongoSatinize())
+
 //required middlewares
 app.use(morgan('tiny'))//this time refers to the amount of info u need 
 app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET))//to access the cookies  we use the same jwt secret to sign the cookies for now to be more secure use diff string
 app.use(express.static('./public'))//to upload images
 app.use(fileUpload())
+
 
 app.get('/',(req,res)=>{
     res.send("ecommerce")
