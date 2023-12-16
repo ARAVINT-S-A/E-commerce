@@ -4,6 +4,11 @@ const Orders=require('../models/order')
 const Product=require('../models/products')
 const {checkPermissions}=require('../utils/index')
 
+const fakeStripeAPI=async ({amount,currency})=>{
+    const client_secret='someRondomValue'
+    return {client_secret}
+}
+
 const getAllOrders=async(req,res)=>{
     res.send('get all order')
 }
@@ -41,9 +46,17 @@ const createOrder=async (req,res)=>{
     Items=[...Items,singleOrderItem]//we add each item 
     subTotal+=item.amount*price
 }
-console.log(Items)
-console.log(subTotal)
-    res.send('create oreder')
+// console.log(Items)
+// console.log(subTotal)
+    const total=tax+shippingFee+subTotal
+    //get client secret
+    const paymentIntent=await fakeStripeAPI({
+        amount:total,currency:'usd'
+    })
+
+    const order=await Orders.create({Items,total,subTotal,tax,shippingFee,clientSecret:paymentIntent.client_secret,user:req.user.userId})
+
+    res.status(StatusCodes.CREATED).json({order,clientSecret:order.clientSecret})
 }
 
 const updateOrder=async (req,res)=>{
