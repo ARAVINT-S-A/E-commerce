@@ -349,11 +349,11 @@
 
 #### Security Packages
 
-- [] express-rate-limiter
-- [] helmet
-- [] xss-clean
-- [] express-mongo-sanitize
-- [] cors (cookies!!!!)
+- [] express-rate-limiter  ///limit request made from  each ip address  
+- [] helmet  //http response headers
+- [] xss-clean //sanitize user input
+- [] express-mongo-sanitize //protect against mongo db injection
+- [] cors (cookies!!!!) //to allow access from diff domains
 
 #### Deploy on Heroku
 
