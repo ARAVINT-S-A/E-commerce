@@ -3,6 +3,7 @@ const {StatusCodes}=require('http-status-codes')
 const Orders=require('../models/order')
 const Product=require('../models/products')
 const {checkPermissions}=require('../utils/index')
+const order = require('../models/order')
 
 const fakeStripeAPI=async ({amount,currency})=>{
     const client_secret='someRondomValue'
@@ -10,15 +11,23 @@ const fakeStripeAPI=async ({amount,currency})=>{
 }
 
 const getAllOrders=async(req,res)=>{
-    res.send('get all order')
+    const orders=await Orders.find({})
+    res.status(StatusCodes.OK).json({orders})
 }
 
 const getSingleOrder=async (req,res)=>{
-    res.send('get single order')
+    const{id:orderId}=req.params
+    const order=await Orders.findOne({_id:orderId})
+    if(!order){
+        throw new CustomError.NotFoundError('no order with id')
+    }
+    checkPermissions({requestUser:req.user,resourceUserId:order.user})
+    res.status(StatusCodes.OK).json({order})
 }
 
 const getCurrentUserOrders=async (req,res)=>{
-    res.send('getcurrent user order')
+    const orders=await Orders.find({user:req.user.userId})
+    res.status(StatusCodes.OK).json({orders})
 }
 
 const createOrder=async (req,res)=>{
@@ -60,7 +69,21 @@ const createOrder=async (req,res)=>{
 }
 
 const updateOrder=async (req,res)=>{
-    res.send('update order')
+    const {id:orderId}=req.params
+    const {paymentIntentId}=req.body
+
+    const order=await Orders.findOne({_id:orderId})
+    if(!order){
+        throw new CustomError.NotFoundError('no order with id')
+    }
+
+    checkPermissions(req.user,order.user)
+    order.paymentIntentId=paymentIntentId
+    order.status='paid'
+    
+
+    await order.save()
+    res.status(StatusCodes.OK).json({msg:'updated'})
 }
 
 module.exports={
