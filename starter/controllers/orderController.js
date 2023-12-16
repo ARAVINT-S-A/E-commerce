@@ -26,6 +26,23 @@ const createOrder=async (req,res)=>{
     if(!tax || !shippingFee){
         throw new CustomError.BadRequestError('no taax or shipping fee')
     }
+    let Items=[]
+    let subTotal=0
+    for(const item of orderItems){
+        const dbProduct=await Product.findOne({_id:product})
+        if(!dbProduct){
+            throw new CustomError.NotFoundError('no product found')
+        }
+    const {name,price,image,_id}=dbProduct
+    const singleOrderItem={
+        amount:item.amount,
+        name,price,image,product:_id
+    }
+    Items=[...Items,singleOrderItem]//we add each item 
+    subtotal+=item.amount*price
+}
+console.log(Items)
+console.log(subtotal)
     res.send('create oreder')
 }
 
