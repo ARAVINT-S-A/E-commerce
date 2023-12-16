@@ -29,7 +29,7 @@ const createOrder=async (req,res)=>{
     let Items=[]
     let subTotal=0
     for(const item of orderItems){
-        const dbProduct=await Product.findOne({_id:product})
+        const dbProduct=await Product.findOne({_id:item.product})
         if(!dbProduct){
             throw new CustomError.NotFoundError('no product found')
         }
@@ -39,10 +39,10 @@ const createOrder=async (req,res)=>{
         name,price,image,product:_id
     }
     Items=[...Items,singleOrderItem]//we add each item 
-    subtotal+=item.amount*price
+    subTotal+=item.amount*price
 }
 console.log(Items)
-console.log(subtotal)
+console.log(subTotal)
     res.send('create oreder')
 }
 
