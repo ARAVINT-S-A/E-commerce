@@ -15,7 +15,7 @@ const register=async(req,res)=>{
         throw new CustomError.BadRequestError('provide details')
     }
 
-    const tokenUser=createTokenUser({user})
+    const tokenUser=createTokenUser({user})//this is there so that we will inly provide some details of the user to store in token not all user details is stored in token
 
     attachCookiesToResponse({res,user:tokenUser})
     // const token=createJWT({payload:tokenUser})
